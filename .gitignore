@@ -1,0 +1,12 @@
+# Ignora file temporanei e generati
+__pycache__/
+*.pyc
+
+# Ignora file di dati e impostazioni locali
+impostazioni.json
+bilanci.json
+
+# Ignora preventivi generati
+Preventivo_*.docx
+*.pdf
+!modello_*.docx
