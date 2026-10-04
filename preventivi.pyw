@@ -617,13 +617,13 @@ def apri_form_bilancio(esistente=None):
     frm.columnconfigure(1, weight=1)
     def mkrow(lbl, row, val=""):
         ttk.Label(frm, text=lbl, width=22, anchor=W).grid(row=row, column=0, sticky=W, pady=4)
-        e = ttk.Entry(frm); e.insert(0, val); e.grid(row=row, column=1, sticky=EW, padx=5)
+        e = CustomEntry(frm); e.insert(0, val); e.grid(row=row, column=1, sticky=EW, padx=5)
         return e
     e_nome = mkrow("Nome Condominio:",  0, esistente.get('nome','')       if esistente else '')
     e_ind  = mkrow("Indirizzo:",        1, esistente.get('indirizzo','')  if esistente else '')
     # data
     ttk.Label(frm, text="Chiusura Bilancio:", width=22, anchor=W).grid(row=2, column=0, sticky=W, pady=4)
-    e_data = ttk.Entry(frm)
+    e_data = CustomEntry(frm)
     if esistente and esistente.get('data_chiusura'):
         try: e_data.insert(0, datetime.strptime(esistente['data_chiusura'],'%Y-%m-%d').strftime('%d/%m/%Y'))
         except: pass
@@ -818,28 +818,45 @@ try:
             cv.yview_scroll(int(-1 * (event.delta / 120)), "units")
     cv.bind("<MouseWheel>", _on_mousewheel)
 
+    def CustomEntry(parent, width=None, **kwargs):
+        kw = {
+            "font": ("Arial", 10),
+            "bg": "white",
+            "fg": "#212529",
+            "relief": "flat",
+            "bd": 1,
+            "highlightthickness": 1,
+            "highlightbackground": "#ced4da",
+            "highlightcolor": "#2fa4e7",
+            "insertbackground": "#212529",
+        }
+        if width:
+            kw["width"] = width
+        kw.update(kwargs)
+        return tk.Entry(parent, **kw)
+
     box = ttk.Frame(pc); box.pack(fill=X, padx=10, pady=10)
 
     # 1. Dati Condominio
     lf1 = ttk.LabelFrame(box, text="  Dati Condominio  "); lf1.pack(fill=X, pady=5)
     in1 = ttk.Frame(lf1); in1.pack(fill=X, padx=10, pady=10)
     ttk.Label(in1, text="Nome Condominio:").pack(anchor=W)
-    entry_nome = ttk.Entry(in1); entry_nome.pack(fill=X)
+    entry_nome = CustomEntry(in1); entry_nome.pack(fill=X)
     ttk.Label(in1, text="Indirizzo:").pack(anchor=W, pady=(5, 0))
-    entry_indirizzo = ttk.Entry(in1); entry_indirizzo.pack(fill=X)
+    entry_indirizzo = CustomEntry(in1); entry_indirizzo.pack(fill=X)
     ttk.Label(in1, text="Città:").pack(anchor=W, pady=(5, 0))
-    entry_citta = ttk.Entry(in1); entry_citta.pack(fill=X)
+    entry_citta = CustomEntry(in1); entry_citta.pack(fill=X)
 
     # 2. Dati Tecnici
     lf2 = ttk.LabelFrame(box, text="  Dati Tecnici  "); lf2.pack(fill=X, pady=5)
     in2 = ttk.Frame(lf2); in2.pack(fill=X, padx=10, pady=10)
     gr = ttk.Frame(in2); gr.pack(fill=X)
     ttk.Label(gr, text="Spesa totale (€):").grid(row=0, column=0, sticky=W)
-    entry_spesa = ttk.Entry(gr, width=10); entry_spesa.grid(row=0, column=1, padx=5)
+    entry_spesa = CustomEntry(gr, width=10); entry_spesa.grid(row=0, column=1, padx=5)
     ttk.Label(gr, text="Ascensori:").grid(row=0, column=2, sticky=W)
-    entry_ascensori = ttk.Entry(gr, width=5); entry_ascensori.grid(row=0, column=3, padx=5)
+    entry_ascensori = CustomEntry(gr, width=5); entry_ascensori.grid(row=0, column=3, padx=5)
     ttk.Label(gr, text="Cancelli:").grid(row=0, column=4, sticky=W)
-    entry_cancelli = ttk.Entry(gr, width=5); entry_cancelli.grid(row=0, column=5, padx=5)
+    entry_cancelli = CustomEntry(gr, width=5); entry_cancelli.grid(row=0, column=5, padx=5)
 
     fr_c = ttk.Frame(in2); fr_c.pack(fill=X, pady=5)
     var_risc = ttk.IntVar(); ttk.Checkbutton(fr_c, text="Riscaldamento", variable=var_risc, command=aggiorna_riepilogo).pack(side=LEFT, padx=5)
@@ -849,7 +866,7 @@ try:
     # M5 – mostra formula trasferte accanto al campo km
     fr_d = ttk.Frame(in2); fr_d.pack(fill=X)
     ttk.Label(fr_d, text="Km (A/R x4):").pack(side=LEFT)
-    entry_km = ttk.Entry(fr_d, width=8); entry_km.pack(side=LEFT, padx=5)
+    entry_km = CustomEntry(fr_d, width=8); entry_km.pack(side=LEFT, padx=5)
     ttk.Button(fr_d, text="📍 Calcola distanza", command=avvia_mappe, bootstyle="info-outline").pack(side=LEFT)
     ttk.Label(fr_d, text=f"  ⟹  km × 4 × 2 × €{config['costo_km']}/km",
               font=("Arial", 8, "italic"), bootstyle="secondary").pack(side=LEFT, padx=5)
@@ -859,26 +876,26 @@ try:
     in3 = ttk.Frame(lf3); in3.pack(fill=X, padx=10, pady=10)
     r1 = ttk.Frame(in3); r1.pack(fill=X)
     ttk.Label(r1, text="Unità abitative:").pack(side=LEFT)
-    entry_unita = ttk.Entry(r1, width=8); entry_unita.pack(side=LEFT, padx=5)
+    entry_unita = CustomEntry(r1, width=8); entry_unita.pack(side=LEFT, padx=5)
     entry_unita.bind("<KeyRelease>", calcola_tariffa_automatica)
     ttk.Label(r1, text="Box auto (5 box = 1 unità):").pack(side=LEFT)
-    entry_box = ttk.Entry(r1, width=8); entry_box.pack(side=LEFT, padx=5)
+    entry_box = CustomEntry(r1, width=8); entry_box.pack(side=LEFT, padx=5)
 
     r2 = ttk.Frame(in3); r2.pack(fill=X, pady=5)
     ttk.Label(r2, text="Prezzo/unità (€):").pack(side=LEFT)
-    entry_prezzo_unita = ttk.Entry(r2, width=8); entry_prezzo_unita.pack(side=LEFT, padx=5)
+    entry_prezzo_unita = CustomEntry(r2, width=8); entry_prezzo_unita.pack(side=LEFT, padx=5)
     lbl_tariffa = ttk.Label(r2, text="", font=("Arial", 9, "italic")); lbl_tariffa.pack(side=LEFT)
 
     r3 = ttk.Frame(in3); r3.pack(fill=X)
     ttk.Label(r3, text="Sconto (%):").pack(side=LEFT)
-    entry_sconto = ttk.Entry(r3, width=8); entry_sconto.pack(side=LEFT, padx=5)
+    entry_sconto = CustomEntry(r3, width=8); entry_sconto.pack(side=LEFT, padx=5)
 
     # 4. Spese Fisse
     lf4 = ttk.LabelFrame(box, text="  Spese Fisse  "); lf4.pack(fill=X, pady=5)
     in4 = ttk.Frame(lf4); in4.pack(fill=X, padx=10, pady=10)
     def mkf(parent, testo, chiave, riga, col):
         ttk.Label(parent, text=testo).grid(row=riga, column=col, sticky=W)
-        e = ttk.Entry(parent, width=9); e.insert(0, str(config[chiave])); e.grid(row=riga, column=col + 1, padx=5, pady=3)
+        e = CustomEntry(parent, width=9); e.insert(0, str(config[chiave])); e.grid(row=riga, column=col + 1, padx=5, pady=3)
         return e
     entry_canc = mkf(in4, "Cancelleria (€):",    "costo_cancelleria", 0, 0)
     entry_adem = mkf(in4, "Adempimenti fiscali:", "costo_fiscali",     0, 2)
@@ -936,7 +953,7 @@ try:
     # M4 – campo di ricerca/filtro
     fr_sto_search = ttk.Frame(fr_sto); fr_sto_search.pack(fill=X, pady=(0, 5))
     ttk.Label(fr_sto_search, text="🔍 Cerca:", font=("Arial", 10)).pack(side=LEFT)
-    entry_storico_filtro = ttk.Entry(fr_sto_search, font=("Arial", 10))
+    entry_storico_filtro = CustomEntry(fr_sto_search, font=("Arial", 10))
     entry_storico_filtro.pack(side=LEFT, fill=X, expand=True, padx=5)
 
     def _filtra_storico(*args):
@@ -967,7 +984,7 @@ try:
     def mkc(parent, testo, chiave):
         f = ttk.Frame(parent); f.pack(fill=X, pady=3)
         ttk.Label(f, text=testo, width=22).pack(side=LEFT)
-        e = ttk.Entry(f); e.insert(0, str(config[chiave])); e.pack(side=RIGHT, fill=X, expand=True)
+        e = CustomEntry(f); e.insert(0, str(config[chiave])); e.pack(side=RIGHT, fill=X, expand=True)
         return e
     ent_cfg_nome = mkc(cfbox, "Nome Studio:",        "nome_studio")
     ent_cfg_addr = mkc(cfbox, "Indirizzo Studio:",   "indirizzo_studio")
