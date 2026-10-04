@@ -927,6 +927,41 @@ try:
                entry_canc, entry_anag, entry_adem, entry_cu):
         _e.bind("<KeyRelease>", aggiorna_riepilogo)
 
+    def _setup_campo_numerico(entry_widget, default_val="0"):
+        def _on_focus_in(event):
+            v = entry_widget.get().strip()
+            if v in ("0", "0.0", "0.00"):
+                entry_widget.delete(0, tk.END)
+            else:
+                entry_widget.select_range(0, tk.END)
+                entry_widget.icursor(tk.END)
+
+        def _on_focus_out(event):
+            v = entry_widget.get().strip()
+            if not v:
+                entry_widget.insert(0, default_val)
+                aggiorna_riepilogo()
+
+        entry_widget.bind("<FocusIn>", _on_focus_in)
+        entry_widget.bind("<FocusOut>", _on_focus_out)
+
+    def _setup_campo_testo_default(entry_widget, default_val="Bergamo"):
+        def _on_focus_in(event):
+            v = entry_widget.get().strip()
+            if v == default_val:
+                entry_widget.select_range(0, tk.END)
+                entry_widget.icursor(tk.END)
+
+        entry_widget.bind("<FocusIn>", _on_focus_in)
+
+    # Gestione automatica azzeramento/selezione al focus per digitazione fluida
+    for _e in (entry_spesa, entry_ascensori, entry_cancelli, entry_km,
+               entry_box, entry_prezzo_unita, entry_sconto,
+               entry_canc, entry_anag, entry_adem, entry_cu):
+        _setup_campo_numerico(_e, "0")
+
+    _setup_campo_testo_default(entry_citta, "Bergamo")
+
     # ════════════════════════════════════════
     # TAB 2 – STORICO
     # ════════════════════════════════════════
