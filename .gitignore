@@ -10,3 +10,7 @@ bilanci.json
 Preventivo_*.docx
 *.pdf
 !modello_*.docx
+
+build/
+dist/
+*.spec
