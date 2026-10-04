@@ -259,17 +259,10 @@ def fine_mappe(win, err, val):
     aggiorna_riepilogo()
 
 def nuovo_preventivo():
-    for e in (entry_nome, entry_indirizzo):
+    for e in (entry_nome, entry_indirizzo, entry_citta, entry_spesa,
+              entry_ascensori, entry_cancelli, entry_unita, entry_box,
+              entry_km, entry_prezzo_unita, entry_sconto):
         e.delete(0, END)
-    entry_citta.delete(0, END);  entry_citta.insert(0, "Bergamo")
-    entry_spesa.delete(0, END);  entry_spesa.insert(0, "0")
-    entry_ascensori.delete(0, END); entry_ascensori.insert(0, "0")
-    entry_cancelli.delete(0, END);  entry_cancelli.insert(0, "0")
-    entry_unita.delete(0, END);  entry_unita.insert(0, "")
-    entry_box.delete(0, END);   entry_box.insert(0, "0")
-    entry_km.delete(0, END);    entry_km.insert(0, "0")
-    entry_prezzo_unita.delete(0, END); entry_prezzo_unita.insert(0, "0")
-    entry_sconto.delete(0, END); entry_sconto.insert(0, "0")
     entry_note.delete("1.0", END)
     var_risc.set(0); var_port.set(0); var_pisc.set(0)
     lbl_tariffa.config(text="")
@@ -835,18 +828,18 @@ try:
     ttk.Label(in1, text="Indirizzo:").pack(anchor=W, pady=(5, 0))
     entry_indirizzo = ttk.Entry(in1); entry_indirizzo.pack(fill=X)
     ttk.Label(in1, text="Città:").pack(anchor=W, pady=(5, 0))
-    entry_citta = ttk.Entry(in1); entry_citta.insert(0, "Bergamo"); entry_citta.pack(fill=X)
+    entry_citta = ttk.Entry(in1); entry_citta.pack(fill=X)
 
     # 2. Dati Tecnici
     lf2 = ttk.LabelFrame(box, text="  Dati Tecnici  "); lf2.pack(fill=X, pady=5)
     in2 = ttk.Frame(lf2); in2.pack(fill=X, padx=10, pady=10)
     gr = ttk.Frame(in2); gr.pack(fill=X)
     ttk.Label(gr, text="Spesa totale (€):").grid(row=0, column=0, sticky=W)
-    entry_spesa = ttk.Entry(gr, width=10); entry_spesa.insert(0, "0"); entry_spesa.grid(row=0, column=1, padx=5)
+    entry_spesa = ttk.Entry(gr, width=10); entry_spesa.grid(row=0, column=1, padx=5)
     ttk.Label(gr, text="Ascensori:").grid(row=0, column=2, sticky=W)
-    entry_ascensori = ttk.Entry(gr, width=5); entry_ascensori.insert(0, "0"); entry_ascensori.grid(row=0, column=3, padx=5)
+    entry_ascensori = ttk.Entry(gr, width=5); entry_ascensori.grid(row=0, column=3, padx=5)
     ttk.Label(gr, text="Cancelli:").grid(row=0, column=4, sticky=W)
-    entry_cancelli = ttk.Entry(gr, width=5); entry_cancelli.insert(0, "0"); entry_cancelli.grid(row=0, column=5, padx=5)
+    entry_cancelli = ttk.Entry(gr, width=5); entry_cancelli.grid(row=0, column=5, padx=5)
 
     fr_c = ttk.Frame(in2); fr_c.pack(fill=X, pady=5)
     var_risc = ttk.IntVar(); ttk.Checkbutton(fr_c, text="Riscaldamento", variable=var_risc, command=aggiorna_riepilogo).pack(side=LEFT, padx=5)
@@ -856,7 +849,7 @@ try:
     # M5 – mostra formula trasferte accanto al campo km
     fr_d = ttk.Frame(in2); fr_d.pack(fill=X)
     ttk.Label(fr_d, text="Km (A/R x4):").pack(side=LEFT)
-    entry_km = ttk.Entry(fr_d, width=8); entry_km.insert(0, "0"); entry_km.pack(side=LEFT, padx=5)
+    entry_km = ttk.Entry(fr_d, width=8); entry_km.pack(side=LEFT, padx=5)
     ttk.Button(fr_d, text="📍 Calcola distanza", command=avvia_mappe, bootstyle="info-outline").pack(side=LEFT)
     ttk.Label(fr_d, text=f"  ⟹  km × 4 × 2 × €{config['costo_km']}/km",
               font=("Arial", 8, "italic"), bootstyle="secondary").pack(side=LEFT, padx=5)
@@ -869,16 +862,16 @@ try:
     entry_unita = ttk.Entry(r1, width=8); entry_unita.pack(side=LEFT, padx=5)
     entry_unita.bind("<KeyRelease>", calcola_tariffa_automatica)
     ttk.Label(r1, text="Box auto (5 box = 1 unità):").pack(side=LEFT)
-    entry_box = ttk.Entry(r1, width=8); entry_box.insert(0, "0"); entry_box.pack(side=LEFT, padx=5)
+    entry_box = ttk.Entry(r1, width=8); entry_box.pack(side=LEFT, padx=5)
 
     r2 = ttk.Frame(in3); r2.pack(fill=X, pady=5)
     ttk.Label(r2, text="Prezzo/unità (€):").pack(side=LEFT)
-    entry_prezzo_unita = ttk.Entry(r2, width=8); entry_prezzo_unita.insert(0, "0"); entry_prezzo_unita.pack(side=LEFT, padx=5)
+    entry_prezzo_unita = ttk.Entry(r2, width=8); entry_prezzo_unita.pack(side=LEFT, padx=5)
     lbl_tariffa = ttk.Label(r2, text="", font=("Arial", 9, "italic")); lbl_tariffa.pack(side=LEFT)
 
     r3 = ttk.Frame(in3); r3.pack(fill=X)
     ttk.Label(r3, text="Sconto (%):").pack(side=LEFT)
-    entry_sconto = ttk.Entry(r3, width=8); entry_sconto.insert(0, "0"); entry_sconto.pack(side=LEFT, padx=5)
+    entry_sconto = ttk.Entry(r3, width=8); entry_sconto.pack(side=LEFT, padx=5)
 
     # 4. Spese Fisse
     lf4 = ttk.LabelFrame(box, text="  Spese Fisse  "); lf4.pack(fill=X, pady=5)
@@ -926,41 +919,6 @@ try:
                entry_box, entry_km, entry_prezzo_unita, entry_sconto,
                entry_canc, entry_anag, entry_adem, entry_cu):
         _e.bind("<KeyRelease>", aggiorna_riepilogo)
-
-    def _setup_campo_numerico(entry_widget, default_val="0"):
-        def _on_focus_in(event):
-            v = entry_widget.get().strip()
-            if v in ("0", "0.0", "0.00"):
-                entry_widget.delete(0, tk.END)
-            else:
-                entry_widget.select_range(0, tk.END)
-                entry_widget.icursor(tk.END)
-
-        def _on_focus_out(event):
-            v = entry_widget.get().strip()
-            if not v:
-                entry_widget.insert(0, default_val)
-                aggiorna_riepilogo()
-
-        entry_widget.bind("<FocusIn>", _on_focus_in)
-        entry_widget.bind("<FocusOut>", _on_focus_out)
-
-    def _setup_campo_testo_default(entry_widget, default_val="Bergamo"):
-        def _on_focus_in(event):
-            v = entry_widget.get().strip()
-            if v == default_val:
-                entry_widget.select_range(0, tk.END)
-                entry_widget.icursor(tk.END)
-
-        entry_widget.bind("<FocusIn>", _on_focus_in)
-
-    # Gestione automatica azzeramento/selezione al focus per digitazione fluida
-    for _e in (entry_spesa, entry_ascensori, entry_cancelli, entry_km,
-               entry_box, entry_prezzo_unita, entry_sconto,
-               entry_canc, entry_anag, entry_adem, entry_cu):
-        _setup_campo_numerico(_e, "0")
-
-    _setup_campo_testo_default(entry_citta, "Bergamo")
 
     # ════════════════════════════════════════
     # TAB 2 – STORICO
