@@ -775,7 +775,7 @@ def _fine_bilanci(win, err, p_w, pdf_ok):
 try:
     app = ttk.Window(themename="lumen")
     app.title("Gestione Preventivi - Studio Serra v4.1")
-    app.geometry("700x820")
+    app.geometry("800x900")
 
     try:
         app.iconbitmap(path_icona)
@@ -806,17 +806,7 @@ try:
     # ════════════════════════════════════════
     # TAB 1 – PREVENTIVO
     # ════════════════════════════════════════
-    cv = tk.Canvas(t1); sc = ttk.Scrollbar(t1, command=cv.yview)
-    pc = ttk.Frame(cv)
-    pc.bind("<Configure>", lambda e: cv.configure(scrollregion=cv.bbox("all")) if e.widget == pc else None)
-    cv.create_window((0, 0), window=pc, anchor="nw")
-    cv.configure(yscrollcommand=sc.set)
-    cv.pack(side=LEFT, fill=BOTH, expand=True); sc.pack(side=RIGHT, fill=Y)
-
-    def _on_mousewheel(event):
-        if cv.winfo_height() < pc.winfo_height():
-            cv.yview_scroll(int(-1 * (event.delta / 120)), "units")
-    cv.bind("<MouseWheel>", _on_mousewheel)
+    box = ttk.Frame(t1); box.pack(fill=BOTH, expand=True, padx=10, pady=10)
 
     def CustomEntry(parent, width=None, **kwargs):
         kw = {
