@@ -141,7 +141,11 @@ def converti_pdf_diretto(input_docx, output_pdf):
 # ─────────────────────────────────────────────────────────
 def _leggi_float(entry_widget):
     try:
-        val = entry_widget.get().replace(',', '.')
+        val = entry_widget.get().replace('€', '').replace(' ', '').strip()
+        if ',' in val and '.' in val:
+            val = val.replace('.', '').replace(',', '.')
+        else:
+            val = val.replace(',', '.')
         return float(val) if val else 0.0
     except:
         return 0.0
@@ -779,6 +783,20 @@ try:
     app = ttk.Window(themename="lumen")
     app.title("Gestione Preventivi - Studio Serra v4.1")
     app.geometry("700x820")
+
+    # Selezione automatica del testo per sovrascrittura immediata ed evitare riposizionamenti del cursore
+    def _auto_seleziona_testo(event):
+        try:
+            w = event.widget
+            if hasattr(w, "select_range"):
+                w.after(10, lambda: (w.select_range(0, tk.END), w.icursor(tk.END)))
+        except:
+            pass
+
+    app.bind_class("TEntry", "<FocusIn>", _auto_seleziona_testo)
+    app.bind_class("Entry", "<FocusIn>", _auto_seleziona_testo)
+    app.bind_class("TEntry", "<Button-1>", _auto_seleziona_testo)
+    app.bind_class("Entry", "<Button-1>", _auto_seleziona_testo)
 
     try:
         app.iconbitmap(path_icona)
